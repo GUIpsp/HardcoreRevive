@@ -1,0 +1,14 @@
+author: GUIpsp
+database: true
+generator: http://dinnerbone.com/minecraft/tools/pluginator/
+main: net.guipsp.hardcorerevive.HardcoreRevive
+name: HardcoreRevive
+startup: postworld
+version: '0.1'
+commands:
+   revive:
+      description: "Revive a player(admin only!)"
+   rkill:
+      description: "Kill a player(admin only!)"
+   rdebug:
+      description: "WOLOLO"
