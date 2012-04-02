@@ -1,5 +1,6 @@
 package net.guipsp.hardcorerevive;
 
+import org.bukkit.ChatColor;
 import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
@@ -50,7 +51,7 @@ public class Eventificator implements Listener {
 		s.setLine(1, "");
 		s.setLine(2, "Here Lies");
 		s.setLine(3, player.getName());
-
+		s.update();
 	}
 
 	@EventHandler
@@ -115,13 +116,14 @@ public class Eventificator implements Listener {
 			if (isDead(((Player) event.getDamager()).getName())) {
 				event.setCancelled(true);
 			}
-		} else if (event.getDamager() instanceof Player) {
+		} else if (event.getEntity() instanceof Player) {
 			if (isDead(((Player) event.getEntity()).getName())) {
 				event.setCancelled(true);
 			}
 		}
 	}
 
+	@EventHandler
 	public void onEntityTarget(EntityTargetEvent event) {
 		if (event.getTarget() instanceof Player) {
 			if (isDead(((Player) event.getTarget()).getName())) {
@@ -130,11 +132,26 @@ public class Eventificator implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void onSignChange(SignChangeEvent event) {
+		if (event.getLine(0).equalsIgnoreCase("revive")) {
+			if (database.find(Databaseficator.class).where()
+					.ieq("playerName", event.getLine(1)).ieq("status", "dead")
+					.findUnique() == null) {
+				event.getPlayer().sendMessage(
+						ChatColor.RED + "Player not found or alive");
+				return;
+			}
+
+		}
+	}
+
 	public void onPlayerRespawnAndJoin(Player player) {
 		if (!isDead(player.getName())) {
 			return;
 		}
-		player.sendMessage("You are dead, you must be revived by a friend!");
+		player.sendMessage(ChatColor.RED
+				+ "You are dead, you must be revived by a friend!");
 	}
 
 	public boolean isDead(String player) {
