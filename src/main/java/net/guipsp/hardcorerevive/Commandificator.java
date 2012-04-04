@@ -4,7 +4,7 @@ import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
-import com.avaje.ebean.*;
+import com.avaje.ebean.EbeanServer;
 
 public class Commandificator implements CommandExecutor {
 
@@ -17,10 +17,6 @@ public class Commandificator implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			String label, String[] args) {
-		if (sender.getName().equalsIgnoreCase("console")) {
-			sender.sendMessage("because i'm lazy this can only be ran ingame");
-			return false;
-		}
 		if (label.equalsIgnoreCase("revive")) {
 
 			Player player;
@@ -37,6 +33,7 @@ public class Commandificator implements CommandExecutor {
 					.where().ieq("playerName", player.getName()).findUnique();
 			query.setStatus("alive");
 			database.save(query);
+			return true;
 		}
 		if (label.equalsIgnoreCase("rkill")) {
 			Player player;
@@ -52,21 +49,30 @@ public class Commandificator implements CommandExecutor {
 			Databaseficator query = database.find(Databaseficator.class)
 					.where().ieq("playerName", player.getName()).findUnique();
 			query.setStatus("dead");
-			player.setHealth(0);
 			database.save(query);
+			return true;
 		}
+		if (label.equalsIgnoreCase("haunt")) {
+			Player player;
 
-		if (label.equalsIgnoreCase("rdebug")) {
-			Databaseficator query = database.find(Databaseficator.class)
-					.where().ieq("playerName", args[0]).findUnique();
-			if (query == null) {
-				query = new Databaseficator();
-				query.setPlayerName(args[0]);
-				query.setStatus("derp");
+			try {
+				player = Bukkit.getPlayer(args[0]);
+			} catch (Exception e) {
+				sender.sendMessage(ChatColor.RED + "Usage: /haunt <player>");
+				return false;
 			}
-			database.save(query);
-			System.out.println(database.find(Databaseficator.class)
-					.findRowCount());
+
+			Databaseficator query = database.find(Databaseficator.class)
+					.where().ieq("playerName", sender.getName())
+					.ieq("status", "dead").findUnique();
+			if (query == null) {
+				sender.sendMessage(ChatColor.RED + "You aren't dead!");
+				return false;
+			}
+			if (player == null) {
+				sender.sendMessage(ChatColor.RED + "Player not found");
+				return false;
+			}
 		}
 		return false;
 	}

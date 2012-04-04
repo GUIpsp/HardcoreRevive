@@ -16,6 +16,7 @@ public class Databaseficator {
 	private String playerName;
 	@NotEmpty
 	private String status;
+	private String reviver;
 	private Stack<int[]> coords = new Stack<int[]>();
 
 	public Stack<int[]> getCoords() {
@@ -48,6 +49,10 @@ public class Databaseficator {
 		this.coords.push(coords);
 	}
 
+	public void removeSingleCoords(int[] coords) {
+		this.coords.remove(coords);
+	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -58,5 +63,13 @@ public class Databaseficator {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getReviver() {
+		return reviver;
+	}
+
+	public void setReviver(String reviver) {
+		this.reviver = reviver;
 	}
 }

@@ -10,5 +10,3 @@ commands:
       description: "Revive a player(admin only!)"
    rkill:
       description: "Kill a player(admin only!)"
-   rdebug:
-      description: "WOLOLO"

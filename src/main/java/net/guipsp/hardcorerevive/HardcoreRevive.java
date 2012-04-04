@@ -6,17 +6,19 @@ import javax.persistence.PersistenceException;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.avaje.ebean.*;
+import com.avaje.ebean.EbeanServer;
 
 public class HardcoreRevive extends JavaPlugin {
 	private Eventificator Eventificator;
 	private Commandificator Commandificator;
 	EbeanServer database;
 
+	@Override
 	public void onDisable() {
 		System.out.println("Beep Bop Boop disabling HardcoreRevive");
 	}
 
+	@Override
 	public void onEnable() {
 		System.out.println("Beep Bop Boop enabling HardcoreRevive");
 		database = getDatabase();
@@ -25,11 +27,10 @@ public class HardcoreRevive extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(Eventificator, this);
 		getCommand("revive").setExecutor(Commandificator);
 		getCommand("rkill").setExecutor(Commandificator);
-		getCommand("rdebug").setExecutor(Commandificator);
-		setupdatabase();
+		setupDatabase();
 	}
 
-	private void setupdatabase() {
+	private void setupDatabase() {
 		try {
 			database.find(Databaseficator.class).findRowCount();
 		} catch (PersistenceException ex) {
